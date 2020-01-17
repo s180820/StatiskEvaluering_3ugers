@@ -14,18 +14,59 @@ summary(phos_Olsen.model) # Residual standard error=14.65 and df=32 and p=3.33e-
 
 plot(phos_data)
 
+
+
 #qq-plot for at tjekke normalfordeling af yield. The errors are normally distributed. 
 qqnorm(phos_data$yield)
+qqline(phos_data$yield)
+hist(phos_data$yield)
 
+qqnorm(phos_data$DGT)
+qqline(phos_data$DGT)
+hist(phos_data$DGT)#strongly positive skewed due to median 42 and mean 65
+summary(phos_data$DGT)
+
+qqnorm(phos_data$olsenP)
+qqline(phos_data$olsenP)
+hist(phos_data$olsenP) #strongly positive skewed due to median 4 and mean 4.3
+summary(phos_data$olsenP)
+
+
+
+
+#Scatterplots af data
 par(mfrow=c(1,2))
-
 plot(phos_data$DGT, phos_data$yield, col = phos_data$location)
-abline()
-
 plot(phos_data$olsenP, phos_data$yield, col = phos_data$location)
-abline()
 
 
 
 
+## 75% to training data, 25% to test data
+train_ids <- 1:30
+
+# Split data
+phos_train <- phos_data[train_ids, ]
+phos_test <- phos_data[- train_ids, ]
+
+phos_DGT.model <- nls(yield ~ alpha * DGT/(beta+DGT), data = phos_train, start = list(alpha = 90, beta = 1))
+predictions <- predict(phos_DGT.model, phos_test)
+MSPE_DGT <- mean((phos_test$DGT - predictions)^2) ## Mean squared prediction error
+
+phos_Olsen.model <- nls(yield ~ alpha * olsenP/(beta+olsenP), data = phos_train, start = list(alpha = 90, beta = 1))
+predictions <- predict(phos_Olsen.model, phos_test)
+MSPE_OLSEN <- mean((phos_test$olsenP - predictions)^2) ## Mean squared prediction error
+
+#LAV en liste med MSPE
+qqnorm(MSPE_OLSEN)
+qqline(phos_data$olsenP)
+
+
+#t.test af DGT og Olsen P
+t.test(phos_data$DGT,phos_data$olsenP)
+t.test(MSPE_OLSEN,MSPE_DGT)
+
+#mean af hver variabel i samme enhed
+mean(phos_data$DGT*(1/10000)) #0.0065
+mean(phos_data$olsenP) #4.3059
 
