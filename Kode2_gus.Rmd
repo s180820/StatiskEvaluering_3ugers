@@ -1,0 +1,72 @@
+---
+title: "Projekt2"
+author: "Gustav"
+date: "1/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading the data into r we use the code:
+```{r}
+load("~/OneDrive - Danmarks Tekniske Universitet/Uni/Statistisk_evaluering/StatiskEvaluering_3ugers/fosfor_data.Rdata")
+
+Phosphorous <- na.omit(Phosphorous)
+plot(Phosphorous$DGT,Phosphorous$yield)
+```
+
+Summary statistics:
+
+
+```{r}
+lmP = lm(yield ~ olsenP, data= Phosphorous)
+lmDGT = lm(yield ~ DGT, data= Phosphorous)
+
+summary(lmP)
+summary(lmDGT)
+```
+
+
+```{r}
+require(nlme)
+
+phos.modelP <- nls(yield ~ alfa * olsenP/(beta + olsenP) , data = Phosphorous,
+start = list(alfa = 90 , beta = 1))
+
+phos.modelDGT <- nls(yield ~ alfa * DGT/(beta + DGT) , data = Phosphorous,
+start = list(alfa = 90 , beta = 1))
+
+summary(phos.modelP)
+summary(phos.modelDGT)
+anova(phos.modelP, phos.modelDGT)
+
+#plot(phos.modelP)
+#plot(phos.modelDGT)
+
+v1<-seq(0,170,0.1)
+v2<-seq(0,9,0.1)
+yfitted1 <- predict(phos.modelDGT,list(DGT=v1))
+yfitted2 <- predict(phos.modelP,list(olsenP=v2))
+
+plot(Phosphorous$DGT, Phosphorous$yield, col=Phosphorous$location)
+lines(v1,yfitted1)
+
+plot(Phosphorous$olsenP, Phosphorous$yield,xlim=c(0,9),col=Phosphorous$location)
+lines(v2,yfitted2)
+```
+
+
+
+
+Teste for Yield i forhold til location:
+```{r}
+lmodel_DGT <- lm(yield ~ DGT + location , data=Phosphorous)
+lmodel_olsenP <- lm(yield ~ olsenP + location, data=Phosphorous)
+
+
+anova(lmodel_DGT)
+anova(lmodel_olsenP)
+```
+
