@@ -52,10 +52,12 @@ phos_test <- phos_data[- train_ids, ]
 phos_DGT.model <- nls(yield ~ alpha * DGT/(beta+DGT), data = phos_train, start = list(alpha = 90, beta = 1))
 predictions <- predict(phos_DGT.model, phos_test)
 MSPE_DGT <- mean((phos_test$DGT - predictions)^2) ## Mean squared prediction error
+MSPE_DGT #1248.617
 
 phos_Olsen.model <- nls(yield ~ alpha * olsenP/(beta+olsenP), data = phos_train, start = list(alpha = 90, beta = 1))
 predictions <- predict(phos_Olsen.model, phos_test)
 MSPE_OLSEN <- mean((phos_test$olsenP - predictions)^2) ## Mean squared prediction error
+MSPE_OLSEN #4800.577
 
 #LAV en liste med MSPE
 qqnorm(MSPE_OLSEN)
