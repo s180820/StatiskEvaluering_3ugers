@@ -50,11 +50,17 @@ v2<-seq(0,9,0.1)
 yfitted1 <- predict(phos.modelDGT,list(DGT=v1))
 yfitted2 <- predict(phos.modelP,list(olsenP=v2))
 
-plot(Phosphorous$DGT, Phosphorous$yield, col=Phosphorous$location)
+par(mfrow=c(1,2),oma=c(0,0,2,0))
+
+plot(Phosphorous$DGT, Phosphorous$yield, col=factor(Phosphorous$location), xlab = "DGT", ylab = "Yield")
 lines(v1,yfitted1)
 
-plot(Phosphorous$olsenP, Phosphorous$yield,xlim=c(0,9),col=Phosphorous$location)
+mtext("Prediction of yield for the two nls models", line=0, side=3, outer=TRUE, cex=2)
+
+plot(Phosphorous$olsenP, Phosphorous$yield,xlim=c(0,9),col=factor(Phosphorous$location), xlab = "olsenP", ylab = "Yield")
 lines(v2,yfitted2)
+
+
 ```
 
 

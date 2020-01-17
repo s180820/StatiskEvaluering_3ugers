@@ -96,6 +96,23 @@ model <- lm(pos ~ coordinate + repetition + subject + experiment)
 anova(model)
 summary(model)
 
+diff_x <- c()
+diff_y <- c()
+diff_z <- c()
+for(i in 1:100){
+  xmax <- max(data[i,][3:102])
+  ymax <- max(data[i,][103:202])
+  zmax <- max(data[i,][203:302])
+  xmin <- min(data[i,][3:102])
+  ymin <- min(data[i,][103:202])
+  zmin <- min(data[i,][203:302])
+  diff_x <- c(diff_x,xmax-xmin)
+  diff_y <- c(diff_y,ymax-ymin)
+  diff_z <- c(diff_z,zmax-zmin)
+}
+
+
+
 temp = c(data[3:102],data[103:202],data[203:302])
 library(lattice)
 
