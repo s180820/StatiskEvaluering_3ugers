@@ -96,27 +96,42 @@ model <- lm(pos ~ coordinate + repetition + subject + experiment)
 anova(model)
 summary(model)
 
+
+##Max coordinates
+d <- armdata
+x <-c()
+for (h in 1:16){
+  for (i in 1:10){
+    for (j in 1:10){
+      for (k in 1:3){
+        x <- c(x, d[[h]][[i]][[j]][,k])
+      }
+    }
+  }
+}
+data <- matrix(x,nrow=300, byrow=F)
+data <- data.frame(t(data))
+
 diff_x <- c()
 diff_y <- c()
 diff_z <- c()
-for(i in 1:100){
-  xmax <- max(data[i,][3:102])
-  ymax <- max(data[i,][103:202])
-  zmax <- max(data[i,][203:302])
-  xmin <- min(data[i,][3:102])
-  ymin <- min(data[i,][103:202])
-  zmin <- min(data[i,][203:302])
+for(i in 1:1600){
+  xmax <- max(data[i,][1:100])
+  ymax <- max(data[i,][101:200])
+  zmax <- max(data[i,][201:300])
+  xmin <- min(data[i,][1:100])
+  ymin <- min(data[i,][101:200])
+  zmin <- min(data[i,][201:300])
   diff_x <- c(diff_x,xmax-xmin)
   diff_y <- c(diff_y,ymax-ymin)
   diff_z <- c(diff_z,zmax-zmin)
 }
 
+experiment <- rep(1:16, each=100)
+temp <- cbind(experiment, diff_x, diff_y, diff_z)
+temp <- data.frame(temp)
 
 
-temp = c(data[3:102],data[103:202],data[203:302])
-library(lattice)
+tempmodel <- lm(experiment ~ diff_x + diff_y + diff_z, data = temp)
 
-par(mfrow=c(1,3))
-boxplot(temp[1:100])
-boxplot(temp[101:200])
-boxplot(temp[201:300])
+anova(tempmodel)
