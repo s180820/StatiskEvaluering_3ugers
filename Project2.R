@@ -2,11 +2,13 @@
 
 #Load data 
 phos_data <- Phosphorous
+phos_data$location <- rep(1:9, each =4)
 phos_data <- na.omit(phos_data) #as.dataframe(phos_data, drop.
+
 
 #Linearmodels for yield
 lmP <- lm(yield ~ olsenP, data= phos_data)
-lmDGT <- lm(yield ~ DGT, data= Phos_data)
+lmDGT <- lm(yield ~ DGT, data= phos_data)
 
 anova(lmP)
 anova(lmDGT)
@@ -28,10 +30,22 @@ v2<-seq(0,9,0.1)
 yfitted1 <- predict(phos_DGT.model,list(DGT=v1))
 yfitted2 <- predict(phos_Olsen.model,list(olsenP=v2))
 
-for(i in 1:11){
-  d<- phos_data[!(phos_data$location=="00" + i),]
-  
+#Leave 4-out cross
+
+fittedDGT <- c()
+fittedolsenP <- c()
+
+for(i in 1:9){
+  d <- phos_data[!(phos_data$location==i),]
+  phos_DGT.model <- nls(yield ~ alpha * DGT/(beta+DGT), data = d, start = list(alpha = 90, beta = 1))
+  phos_Olsen.model <- nls(yield ~ alpha * olsenP/(beta+olsenP), data = d, start = list(alpha = 90, beta = 1))
+  yfitted1 <- predict(phos_DGT.model,d)
+  yfitted2 <- predict(phos_Olsen.model,d)
+  fittedDGT <- c(fittedDGT,yfitted1)
+  fittedolsenP <- c(fittedolsenP, yfitted2)
 }
+
+t.test(fittedDGT,fittedolsenP)
 
 par(mfrow=c(1,2),oma=c(0,0,2,0))
 
