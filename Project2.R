@@ -12,11 +12,13 @@ phos_Olsen.model <- nls(yield ~ alpha * olsenP/(beta+olsenP), data = Phosphorous
 summary(phos_DGT.model) # Residual standard error=10.84 and df=32 and p=<2e-16
 summary(phos_Olsen.model) # Residual standard error=14.65 and df=32 and p=3.33e-11
 
+
+
 plot(phos_data)
 
 
 
-#qq-plot for at tjekke normalfordeling af yield. The errors are normally distributed. 
+#qq-plot for at tjekke normalfordeling af yield. The errors are normally distributed?. 
 qqnorm(phos_data$yield)
 qqline(phos_data$yield)
 hist(phos_data$yield)
