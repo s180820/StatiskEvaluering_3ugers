@@ -134,4 +134,28 @@ temp <- data.frame(temp)
 
 tempmodel <- lm(experiment ~ diff_x + diff_y + diff_z, data = temp)
 
+# ANOVA when splitted into three models
+
+model1 <- lm(diff_x ~ experiment)
+model2 <- lm(diff_y ~ experiment)
+model3 <- lm(diff_z ~ experiment)
+
+anova(model1)
+anova(model2)
+anova(model3)
+
+# Adjusting p-value due to multiple comparisons
+
+pvals <- c(anova(model1)[[5]][[1]],anova(model2)[[5]][[1]],anova(model3)[[5]][[1]])
+pvals
+p.adjust(pvals,method = "bonferroni")
+p.adjust(pvals,method = "BH")
+p.adjust(pvals,method = "hochberg")
+p.adjust(pvals,method = "fdr")
+
+# Significant effect of experiment on the x,y and z direction
+
 anova(tempmodel)
+
+
+
