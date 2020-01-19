@@ -156,6 +156,7 @@ p.adjust(pvals,method = "fdr")
 # Significant effect of experiment on the x,y and z direction
 
 anova(tempmodel)
-
+temp
+summary(temp)
 
 

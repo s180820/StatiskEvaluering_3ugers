@@ -44,7 +44,8 @@ for(i in 1:9){
   fittedDGT <- c(fittedDGT,yfitted1)
   fittedolsenP <- c(fittedolsenP, yfitted2)
 }
-
+fittedDGT
+fittedolsenP
 t.test(fittedDGT,fittedolsenP)
 
 par(mfrow=c(1,2),oma=c(0,0,2,0))
