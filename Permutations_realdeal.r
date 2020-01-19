@@ -32,14 +32,10 @@ for (i in 1:n){
 
 }
 
-results_DGT[,2]
-results_DGT[,1]
-results_DGT[,1][1]
-
 par(mfrow = c(1,2))
-hist(results_DGT[,1], xlab = "Alpha")
+hist(results_DGT[,1], xlab = "Alpha", main = "Histogram of permutated alphas")
 abline(v=coef(lol)[1], col='red')
-hist(results_DGT[,2], xlab = "Beta")
+hist(results_DGT[,2], xlab = "Beta", main = "Histogram of permutated betas")
 abline(v=coef(lol)[2], col='red')
 
 #P-værdi for alpha
