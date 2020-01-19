@@ -41,11 +41,14 @@ for(i in 1:9){
   phos_Olsen.model <- nls(yield ~ alpha * olsenP/(beta+olsenP), data = d, start = list(alpha = 90, beta = 1))
   yfitted1 <- predict(phos_DGT.model,d)
   yfitted2 <- predict(phos_Olsen.model,d)
-  fittedDGT <- c(fittedDGT,yfitted1)
-  fittedolsenP <- c(fittedolsenP, yfitted2)
+  fittedDGT <- c(fittedDGT, d$yield-yfitted1)
+  fittedolsenP <- c(fittedolsenP, d$yield-yfitted2)
 }
 
-t.test(fittedDGT,fittedolsenP)
+mean(abs(fittedDGT))
+mean(abs(fittedolsenP))
+
+t.test(abs(fittedDGT),abs(fittedolsenP))
 
 par(mfrow=c(1,2),oma=c(0,0,2,0))
 
