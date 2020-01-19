@@ -45,11 +45,20 @@ for(i in 1:9){
   fittedDGT <- c(fittedDGT, d$yield-yfitted1)
   fittedolsenP <- c(fittedolsenP, d$yield-yfitted2)
 }
+<<<<<<< HEAD
+fittedDGT
+fittedolsenP
+=======
 
 mean(abs(fittedDGT))
 mean(abs(fittedolsenP))
 
+
+t.test(abs(fittedDGT),abs(fittedolsenP))
+
+>>>>>>> 8e2f91e02b7ad04a61d37dd38962a894a50f7a38
 t.test(fittedDGT,fittedolsenP)
+
 
 par(mfrow=c(1,2),oma=c(0,0,2,0))
 

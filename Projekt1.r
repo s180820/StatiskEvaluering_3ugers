@@ -128,17 +128,16 @@ for(i in 1:1600){
 }
 
 experiment <- rep(1:16, each=100)
-temp <- cbind(experiment, diff_x, diff_y, diff_z)
+temp <- cbind(as.factor(experiment), diff_x, diff_y, diff_z)
 temp <- data.frame(temp)
-
 
 tempmodel <- lm(experiment ~ diff_x + diff_y + diff_z, data = temp)
 
 # ANOVA when splitted into three models
 
-model1 <- lm(diff_x ~ experiment)
-model2 <- lm(diff_y ~ experiment)
-model3 <- lm(diff_z ~ experiment)
+model1 <- lm(diff_x ~ experiment, data=temp)
+model2 <- lm(diff_y ~ experiment, data=temp)
+model3 <- lm(diff_z ~ experiment, data=temp)
 
 anova(model1)
 anova(model2)
@@ -156,6 +155,7 @@ p.adjust(pvals,method = "fdr")
 # Significant effect of experiment on the x,y and z direction
 
 anova(tempmodel)
-
+temp
+summary(temp)
 
 
