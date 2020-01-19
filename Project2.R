@@ -5,10 +5,10 @@ phos_data <- Phosphorous
 phos_data$location <- rep(1:9, each =4)
 phos_data <- na.omit(phos_data) #as.dataframe(phos_data, drop.
 
-#Disse bruges ikke til noget lige nu
+
 #Linearmodels for yield
-#lmP <- lm(yield ~ olsenP, data= phos_data)
-#lmDGT <- lm(yield ~ DGT, data= phos_data)
+lmP <- lm(yield ~ olsenP, data= phos_data)
+lmDGT <- lm(yield ~ DGT, data= phos_data)
 
 #anova(lmP)
 #anova(lmDGT)
@@ -45,6 +45,8 @@ for(i in 1:9){
   fittedolsenP <- c(fittedolsenP, d$yield-yfitted2)
 }
 
+mean(abs(fittedDGT))
+mean(abs(fittedolsenP))
 
 t.test(fittedDGT,fittedolsenP)
 
