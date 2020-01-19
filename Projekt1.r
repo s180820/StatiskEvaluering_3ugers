@@ -53,8 +53,18 @@ colnames(x) <- features
 
 
 data <- cbind(y,rep,x)
+
+#larverne:
+par(mfrow=c(1,3),oma=c(0,0,2,0))
+boxplot(data[,3:102])
+boxplot(data[,103:202])
+mtext("Boxplot of each Coordinate of Experiment 3", line=0, side=3, outer=TRUE, cex=2)
+boxplot(data[,203:302])
+
 #Tjek for rows without data
 any(is.na(x))
+
+
 
 #create model to perform statistics
 
