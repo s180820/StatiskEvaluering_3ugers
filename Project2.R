@@ -10,12 +10,12 @@ phos_data <- na.omit(phos_data) #as.dataframe(phos_data, drop.
 lmP <- lm(yield ~ olsenP, data= phos_data)
 lmDGT <- lm(yield ~ DGT, data= phos_data)
 
-anova(lmP)
-anova(lmDGT)
+#anova(lmP)
+#anova(lmDGT)
 
 #Summaries of the linearmodels
-summary(lmP)
-summary(lmDGT)
+#summary(lmP)
+#summary(lmDGT)
 
 #Michaelis-Menten model (non-linear regression )
 #y=a*x/(1+b*x), hvor x=DGT, y=yield.
@@ -48,7 +48,11 @@ for(i in 1:9){
 mean(abs(fittedDGT))
 mean(abs(fittedolsenP))
 
+
 t.test(abs(fittedDGT),abs(fittedolsenP))
+
+t.test(fittedDGT,fittedolsenP)
+
 
 par(mfrow=c(1,2),oma=c(0,0,2,0))
 
