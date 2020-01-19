@@ -7,8 +7,8 @@ phos_data <- na.omit(phos_data) #as.dataframe(phos_data, drop.
 
 
 #Linearmodels for yield
-lmP <- lm(yield ~ olsenP, data= phos_data)
-lmDGT <- lm(yield ~ DGT, data= phos_data)
+#lmP <- lm(yield ~ olsenP, data= phos_data)
+#lmDGT <- lm(yield ~ DGT, data= phos_data)
 
 #anova(lmP)
 #anova(lmDGT)
@@ -24,6 +24,7 @@ phos_Olsen.model <- nls(yield ~ alpha * olsenP/(beta+olsenP), data = Phosphorous
 
 summary(phos_DGT.model) # Residual standard error=10.84 and df=32 and p=<2e-16
 summary(phos_Olsen.model) # Residual standard error=14.65 and df=32 and p=3.33e-11
+
 
 v1<-seq(0,170,0.1)
 v2<-seq(0,9,0.1)
