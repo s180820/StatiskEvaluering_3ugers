@@ -10,10 +10,14 @@ results_olsenP <- c()
 results_DGT_lm <- c()
 results_olsenP_lm <- c()
 
-lol <- nls(yield~alpha * DGT/(DGT+beta), data = phos_data,
+phos_DGT.model <- nls(yield~alpha * DGT/(DGT+beta), data = phos_data,
+           start=list(alpha=90, beta=1), nls.control(warnOnly = T))
+phos_Olsen.model <- nls(yield~alpha * olsenP/(olsenP+beta), data = phos_data,
            start=list(alpha=90, beta=1), nls.control(warnOnly = T))
 
-coef(lol)[1]
+
+coef(phos_DGT.model)[1]
+coef(phos_Olsen.model)[1]
 for (i in 1:n){
   permutations <- sample(9)
   permutations_data$yield <- unlist(perm_data[permutations]) 
@@ -32,11 +36,20 @@ for (i in 1:n){
 
 }
 
+#DGT
 par(mfrow = c(1,2))
 hist(results_DGT[,1], xlab = "Alpha", main = "Histogram of permutated alphas")
-abline(v=coef(lol)[1], col='red')
+abline(v=coef(phos_DGT.model)[1], col='red')
 hist(results_DGT[,2], xlab = "Beta", main = "Histogram of permutated betas")
-abline(v=coef(lol)[2], col='red')
+abline(v=coef(phos_DGT.model)[2], col='red')
+
+#OlsenP
+par(mfrow = c(1,2))
+hist(results_olsenP[,1], xlab = "Alpha", main = "Histogram of permutated alphas")
+abline(v=coef(phos_Olsen.model)[1], col='red')
+hist(results_olsenP[,2], xlab = "Beta", main = "Histogram of permutated betas")
+abline(v=coef(phos_Olsen.model)[2], col='red')
+
 
 #P-værdi for alpha
 mean(results_DGT[,1] > coef(lol)[1])

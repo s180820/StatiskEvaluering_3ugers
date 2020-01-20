@@ -6,17 +6,6 @@ phos_data$location <- rep(1:9, each =4)
 phos_data <- na.omit(phos_data) #as.dataframe(phos_data, drop.
 
 
-#Linearmodels for yield
-#lmP <- lm(yield ~ olsenP, data= phos_data)
-#lmDGT <- lm(yield ~ DGT, data= phos_data)
-
-#anova(lmP)
-#anova(lmDGT)
-
-#Summaries of the linearmodels
-#summary(lmP)
-#summary(lmDGT)
-
 #Michaelis-Menten model (non-linear regression )
 #y=a*x/(1+b*x), hvor x=DGT, y=yield.
 phos_DGT.model <- nls(yield ~ alpha * DGT/(beta+DGT), data = Phosphorous, start = list(alpha = 90, beta = 1))
@@ -45,7 +34,10 @@ for(i in 1:9){
   fittedDGT <- c(fittedDGT, d$yield-yfitted1)
   fittedolsenP <- c(fittedolsenP, d$yield-yfitted2)
 }
-<<<<<<< HEAD
+
+#Visualisation of cross validation 
+
+
 fittedDGT
 fittedolsenP
 =======
@@ -53,11 +45,6 @@ fittedolsenP
 mean(abs(fittedDGT))
 mean(abs(fittedolsenP))
 
-
-t.test(abs(fittedDGT),abs(fittedolsenP))
-
->>>>>>> 8e2f91e02b7ad04a61d37dd38962a894a50f7a38
-t.test(fittedDGT,fittedolsenP)
 
 
 par(mfrow=c(1,2),oma=c(0,0,2,0))
@@ -91,7 +78,7 @@ par(mfrow=c(1,2))
 plot(phos_data$DGT, phos_data$yield, col = phos_data$location)
 plot(phos_data$olsenP, phos_data$yield, col = phos_data$location)
 
-
+set.seed(123)
 ## 75% to training data, 25% to test data
 train_ids <- 1:30
 
@@ -102,20 +89,13 @@ phos_test <- phos_data[- train_ids, ]
 #Predictions
 predictions <- predict(phos_DGT.model, phos_test)
 MSPE_DGT <- mean((phos_test$DGT - predictions)^2) ## Mean squared prediction error
-MSPE_DGT #1248.617
+MSPE_DGT #1121
 
 predictions <- predict(phos_Olsen.model, phos_test)
 MSPE_OLSEN <- mean((phos_test$olsenP - predictions)^2) ## Mean squared prediction error
-MSPE_OLSEN #4800.577
-
-#LAV en liste med MSPE
-qqnorm(MSPE_OLSEN)
-qqline(phos_data$olsenP)
+MSPE_OLSEN #4470.073
 
 
-#t.test af DGT og Olsen P
-t.test(phos_data$DGT,phos_data$olsenP)
-t.test(MSPE_OLSEN,MSPE_DGT)
 
 #mean af hver variabel i samme enhed
 mean(phos_data$DGT*(1/10000)) #0.0065
