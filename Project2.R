@@ -31,6 +31,24 @@ v2<-seq(0,9,0.1)
 yfitted1 <- predict(phos_DGT.model,list(DGT=v1))
 yfitted2 <- predict(phos_Olsen.model,list(olsenP=v2))
 
+yfitted1 <- predict(phos_DGT.model,phos_data)
+yfitted2 <- predict(phos_Olsen.model)
+
+par(mfrow=c(1,2),oma=c(0,0,2,0))
+
+plot(phos_data$DGT, phos_data$yield, col=factor(phos_data$location), xlab = "DGT", ylab = "Yield")
+lines(v1,yfitted1)
+
+mtext("Prediction of yield for the two nls models", line=0, side=3, outer=TRUE, cex=2)
+
+plot(phos_data$olsenP, phos_data$yield,xlim=c(0,9),col=factor(phos_data$location), xlab = "olsenP", ylab = "Yield")
+lines(v2,yfitted2)
+
+par(mfrow=c(1,2))
+plot((phos_data$yield-yfitted1)**2,ylim=c(0,1400), main = "DGT", xlab = "Yield index", ylab = "Quadric loss")
+mtext("Loss of the two models", line=0, side=3, outer=TRUE, cex=2)
+plot((phos_data$yield-yfitted2)**2,ylim=c(0,1400), main = "olsenP", xlab = "Yield index" )
+
 #Leave 4-out cross
 
 fittedDGT <- c()
@@ -45,25 +63,23 @@ for(i in 1:9){
   yfitted2 <- predict(phos_Olsen.model,d)
   fittedDGT <- c(fittedDGT, d$yield-yfitted1)
   fittedolsenP <- c(fittedolsenP, d$yield-yfitted2)
-  lossDGT <- c(lossDGT, (d$yield-yfitted1)**2)
-  lossolsenP <- c(lossolsenP, (d$yield-yfitted2)**2)
+  lossDGT <- c(lossDGT, mean((d$yield-yfitted1)**2))
+  lossolsenP <- c(lossolsenP, mean((d$yield-yfitted2)**2))
 }
+
+par(mfrow=c(1,2))
+plot(lossDGT,ylim=c(0,300), main = "DGT", xlab = "CV fold", ylab = "Quadric loss")
+mtext("Mean quadric loss of the two models", line=0, side=3, outer=TRUE, cex=2)
+plot(lossolsenP,ylim=c(0,300), main = "olsenP", xlab = "CV fold" )
+
 
 t.test(lossDGT, lossolsenP)
 
+mean(lossDGT)
+mean(lossolsenP)
+
 mean(abs(fittedDGT))
 mean(abs(fittedolsenP))
-
-
-par(mfrow=c(1,2),oma=c(0,0,2,0))
-
-plot(phos_data$DGT, phos_data$yield, col=factor(phos_data$location), xlab = "DGT", ylab = "Yield")
-lines(v1,yfitted1)
-
-mtext("Prediction of yield for the two nls models", line=0, side=3, outer=TRUE, cex=2)
-
-plot(phos_data$olsenP, phos_data$yield,xlim=c(0,9),col=factor(phos_data$location), xlab = "olsenP", ylab = "Yield")
-lines(v2,yfitted2)
 
 #qq-plot for at tjekke normalfordeling af yield. The errors are normally distributed. 
 qqnorm(phos_data$yield)

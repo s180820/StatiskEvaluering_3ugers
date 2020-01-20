@@ -149,6 +149,10 @@ model1 <- lm(diff_x ~ experiment, data=temp)
 model2 <- lm(diff_y ~ experiment, data=temp)
 model3 <- lm(diff_z ~ experiment, data=temp)
 
+confint(model1)
+confint(model2)
+confint(model3)
+
 anova(model1)
 anova(model2)
 anova(model3)
