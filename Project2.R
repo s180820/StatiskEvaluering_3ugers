@@ -35,7 +35,8 @@ yfitted2 <- predict(phos_Olsen.model,list(olsenP=v2))
 
 fittedDGT <- c()
 fittedolsenP <- c()
-
+lossDGT <- c()
+lossolsenP <- c()
 for(i in 1:9){
   d <- phos_data[!(phos_data$location==i),]
   phos_DGT.model <- nls(yield ~ alpha * DGT/(beta+DGT), data = d, start = list(alpha = 90, beta = 1))
@@ -44,20 +45,14 @@ for(i in 1:9){
   yfitted2 <- predict(phos_Olsen.model,d)
   fittedDGT <- c(fittedDGT, d$yield-yfitted1)
   fittedolsenP <- c(fittedolsenP, d$yield-yfitted2)
+  lossDGT <- c(lossDGT, (d$yield-yfitted1)**2)
+  lossolsenP <- c(lossolsenP, (d$yield-yfitted2)**2)
 }
-<<<<<<< HEAD
-fittedDGT
-fittedolsenP
-=======
+
+t.test(lossDGT, lossolsenP)
 
 mean(abs(fittedDGT))
 mean(abs(fittedolsenP))
-
-
-t.test(abs(fittedDGT),abs(fittedolsenP))
-
->>>>>>> 8e2f91e02b7ad04a61d37dd38962a894a50f7a38
-t.test(fittedDGT,fittedolsenP)
 
 
 par(mfrow=c(1,2),oma=c(0,0,2,0))
