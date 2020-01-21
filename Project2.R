@@ -15,16 +15,18 @@ summary(phos_DGT.model) # Residual standard error=10.84 and df=32 and p=<2e-16
 summary(phos_Olsen.model) # Residual standard error=14.65 and df=32 and p=3.33e-11
 
 
+
 v1<-seq(0,170,0.1)
 v2<-seq(0,9,0.1)
 yfitted1 <- predict(phos_DGT.model,list(DGT=v1))
 yfitted2 <- predict(phos_Olsen.model,list(olsenP=v2))
 
-#Leave 4-out cross
+#Leave-one-out cross
 
 fittedDGT <- c()
 fittedolsenP <- c()
-
+lossDGT <- c()
+lossolsenP <- c()
 for(i in 1:9){
   d <- phos_data[!(phos_data$location==i),]
   phos_DGT.model <- nls(yield ~ alpha * DGT/(beta+DGT), data = d, start = list(alpha = 90, beta = 1))
@@ -33,19 +35,17 @@ for(i in 1:9){
   yfitted2 <- predict(phos_Olsen.model,d)
   fittedDGT <- c(fittedDGT, d$yield-yfitted1)
   fittedolsenP <- c(fittedolsenP, d$yield-yfitted2)
+  lossDGT <- c(lossDGT, (d$yield-yfitted1)**2)
+  lossolsenP <- c(lossolsenP, (d$yield-yfitted2)**2)
 }
 
-#Visualisation of cross validation 
+#Loss mean
+mean(lossDGT)
+mean(lossolsenP)
 
 
 fittedDGT
 fittedolsenP
-=======
-
-mean(abs(fittedDGT))
-mean(abs(fittedolsenP))
-
-
 
 par(mfrow=c(1,2),oma=c(0,0,2,0))
 
@@ -57,6 +57,7 @@ mtext("Prediction of yield for the two nls models", line=0, side=3, outer=TRUE, 
 plot(phos_data$olsenP, phos_data$yield,xlim=c(0,9),col=factor(phos_data$location), xlab = "olsenP", ylab = "Yield")
 lines(v2,yfitted2)
 
+par(mfrow=c(1,2))
 #qq-plot for at tjekke normalfordeling af yield. The errors are normally distributed. 
 qqnorm(phos_data$yield)
 qqline(phos_data$yield)
@@ -100,4 +101,37 @@ MSPE_OLSEN #4470.073
 #mean af hver variabel i samme enhed
 mean(phos_data$DGT*(1/10000)) #0.0065
 mean(phos_data$olsenP) #4.3059
+
+
+#Residuals
+# Plots of residuals
+formula1 <- as.formula(yield ~ alpha * DGT/(beta+DGT))
+O2K.nls1 <- nls(formula1, data = Phosphorous, start = list(alpha = 90, beta = 1))
+O2K.res1 <- nlsResiduals(O2K.nls1)
+plot(O2K.res1, which = 0)
+
+# Histogram and qq-plot
+plot(O2K.res1, which = 5)
+plot(O2K.res1, which = 6)
+
+# Tests
+test.nlsResiduals(O2K.res1)
+
+qqnorm(phos_DGT.model$residuals)
+
+
+#OlsenP
+formula2 <- as.formula(yield ~ alpha * olsenP/(beta+olsenP))
+O2K.nls2 <- nls(formula2, data = Phosphorous, start = list(alpha = 90, beta = 1))
+O2K.res2 <- nlsResiduals(O2K.nls2)
+plot(O2K.res2, which = 0)
+
+# Histogram and qq-plot
+plot(O2K.res2, which = 5)
+plot(O2K.res2, which = 6)
+
+# Tests
+test.nlsResiduals(O2K.res2)
+
+
 

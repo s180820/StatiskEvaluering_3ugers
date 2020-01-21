@@ -52,10 +52,12 @@ abline(v=coef(phos_Olsen.model)[2], col='red')
 
 
 #P-værdi for alpha
-mean(results_DGT[,1] > coef(lol)[1])
+mean(results_DGT[,1] > coef(phos_DGT.model)[1]) #0.0347
+mean(results_olsenP[,1] > coef(phos_DGT.model)[1]) #0.1182
 
 #P-værdi for beta
-mean(results_DGT[,2] > coef(lol)[2])
+mean(results_DGT[,2] > coef(phos_DGT.model)[2]) #0.0343
+mean(results_olsenP[,2] > coef(phos_DGT.model)[2]) #0
 
 hist(results_DGT_lm[,1])
 abline(v=coef(lmDGT[1])) #fra vores project2.R (den rigtige værdi inden permutation)
